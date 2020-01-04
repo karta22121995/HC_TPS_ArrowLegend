@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 85782accc27bceb4bb4b658a2cc6f701
+guid: 87d95f6a7eca15949868604ad656c66d
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -11,7 +11,8 @@ TrueTypeFontImporter:
   fontName: Mamelon
   fontNames:
   - Mamelon
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 85782accc27bceb4bb4b658a2cc6f701, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

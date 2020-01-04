@@ -5,6 +5,8 @@ public class Player : MonoBehaviour
     #region 欄位
     [Header("移動速度"), Range(1, 200)]
     public float speed = 20;
+    [Header("玩家資料")]
+    public PlayerData data;
 
     private Joystick joy;
     private Transform target;
@@ -13,16 +15,18 @@ public class Player : MonoBehaviour
     #endregion
 
     private LevelManager levelManager;  // 關卡管理器
+    private HpBarControl hpControl;     // 血條控制器
 
     #region 事件
     private void Start()
     {
-        rig = GetComponent<Rigidbody>();                                 // 剛體欄位 = 取得元件<泛型>()
+        rig = GetComponent<Rigidbody>();                                     // 剛體欄位 = 取得元件<泛型>()
         ani = GetComponent<Animator>();
-        // target = GameObject.Find("目標").GetComponent<Transform>();    // 寫法 1
-        target = GameObject.Find("目標").transform;                       // 寫法 2
+        // target = GameObject.Find("目標").GetComponent<Transform>();        // 寫法 1
+        target = GameObject.Find("目標").transform;                           // 寫法 2
         joy = GameObject.Find("虛擬搖桿").GetComponent<Joystick>();
-        levelManager = FindObjectOfType<LevelManager>();                  // 透過類型尋找物件
+        levelManager = FindObjectOfType<LevelManager>();                      // 透過類型尋找物件
+        hpControl = transform.Find("血條介面").GetComponent<HpBarControl>();  // 變形.尋找("子物件")
     }
 
     // 固定更新：固定一秒 50 次 - 物理行為
@@ -81,9 +85,14 @@ public class Player : MonoBehaviour
         ani.SetTrigger("攻擊觸發");     // 播放攻擊動畫 SetTrigger("參數名稱")
     }
 
-    private void Hit(float damage)
+    /// <summary>
+    /// 玩家受傷方法：扣血 顯示傷害直 更新血條
+    /// </summary>
+    /// <param name="damage">玩家受多少傷害</param>
+    public void Hit(float damage)
     {
-
+        data.hp -= damage;  // 血量 扣除 傷害值
+        hpControl.UpdateHpBar(data.hpMax, data.hp);
     }
 
     private void Dead()

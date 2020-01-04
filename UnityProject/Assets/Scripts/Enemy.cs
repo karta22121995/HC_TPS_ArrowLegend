@@ -16,14 +16,18 @@ public class Enemy : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.speed = data.speed;
         player = GameObject.Find("玩家").transform;
+        agent.SetDestination(player.position);
     }
+
+    public float timer;              //計時器
 
     private void Update()
     {
         Move();
     }
 
-    private void Attack()
+    // virtual 虛擬 : 讓子類別可以複寫
+    public virtual void Attack()
     {
 
     }
@@ -31,6 +35,11 @@ public class Enemy : MonoBehaviour
     public virtual void Move()
     {
 
+    }
+
+    public virtual void Wait()
+    { 
+    
     }
 
     private void Hit()
