@@ -91,13 +91,17 @@ public class Player : MonoBehaviour
     /// <param name="damage">玩家受多少傷害</param>
     public void Hit(float damage)
     {
-        data.hp -= damage;  // 血量 扣除 傷害值
+        data.hp -= damage;                             // 血量 扣除 傷害值
+        data.hp = Mathf.Clamp(data.hp, 0, 10000);      // 血量 夾在 0 - 10000
         hpControl.UpdateHpBar(data.hpMax, data.hp);
+        if (data.hp == 0) Dead();                      // 如果 血量 為 0 呼叫死亡的方法
+        StartCoroutine(hpControl.ShowDamage(damage));  // 血量控制器.顯示傷害
     }
 
     private void Dead()
     {
         ani.SetBool("死亡動畫", true);  // 播放死亡動畫 SetBool("參數名稱", 布林值)
+        this.enabled = false;           // this 此類別 - enabled 是否啟動
     }
     #endregion
 }
