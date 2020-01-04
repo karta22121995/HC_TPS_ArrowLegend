@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     private Animator ani;
     #endregion
 
+    private LevelManager levelManager;  // 關卡管理器
+
     #region 事件
     private void Start()
     {
@@ -20,6 +22,7 @@ public class Player : MonoBehaviour
         // target = GameObject.Find("目標").GetComponent<Transform>();    // 寫法 1
         target = GameObject.Find("目標").transform;                       // 寫法 2
         joy = GameObject.Find("虛擬搖桿").GetComponent<Joystick>();
+        levelManager = FindObjectOfType<LevelManager>();                  // 透過類型尋找物件
     }
 
     // 固定更新：固定一秒 50 次 - 物理行為
@@ -33,6 +36,15 @@ public class Player : MonoBehaviour
         // 測試區域
         if (Input.GetKeyDown(KeyCode.Alpha1)) Attack();
         if (Input.GetKeyDown(KeyCode.Alpha2)) Dead();
+    }
+
+    // 觸發事件：碰到勾選 IsTrigger 物件執行一次
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "傳送區域")
+        {
+            levelManager.StartCoroutine("LoadLevel");
+        }
     }
     #endregion
 

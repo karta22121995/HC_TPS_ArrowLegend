@@ -9,12 +9,15 @@ public class LearnLerp : MonoBehaviour
     public Color blue = Color.blue;
     public Color newColor;
 
+    public float hp = 50;
+
     private void Start()
     {
-        // 認識差值 Lerp
-        print(Mathf.Lerp(0, 10, 0.5f));
+        // 認識插值 Lerp
+        print(Mathf.Lerp(0, 10, 0.7f));
         print(Vector3.Lerp(a, b, 0.5f));
         newColor = Color.Lerp(red, blue, 0.5f);
-    }
 
+        print(Mathf.Clamp(hp, 0, 100));
+    }
 }
