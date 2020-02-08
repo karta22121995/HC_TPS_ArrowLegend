@@ -104,16 +104,24 @@ public class Player : MonoBehaviour
         else
         {
             timer = 0;                      // 歸零
-            ani.SetTrigger("攻擊觸發");     // 播放攻擊動畫 SetTrigger("參數名稱")
 
             // 1. 取得所有敵人
             enemys.Clear();                                                                     // 清除清單 (刪除清單內容)
             enemys = FindObjectsOfType<Enemy>().ToList();                                       // 透過類型尋找複數物件 (傳回陣列)    // ToList 將陣列轉換為清單 List
 
-            // 2. 取得所有敵人距離
-            // 陣列數量：Length
-            // 清單數量：Count
-            enemysDistance.Clear();                                                             // 清除清單
+            // 沒有怪物 過關行為
+            if (enemys.Count == 0)
+            {
+                levelManager.PassLevel();
+                return;
+            }
+
+            ani.SetTrigger("攻擊觸發");     // 播放攻擊動畫 SetTrigger("參數名稱")
+
+                // 2. 取得所有敵人距離
+                // 陣列數量：Length
+                // 清單數量：Count
+                enemysDistance.Clear();                                                             // 清除清單
             for (int i = 0; i < enemys.Count; i++)                                              // 迴圈執行
             {
                 float dis = Vector3.Distance(transform.position, enemys[i].transform.position); // 取得距離
@@ -134,6 +142,8 @@ public class Player : MonoBehaviour
             bullet.AddComponent<Bullet>();
             bullet.GetComponent<Bullet>().damage = data.attack;
             bullet.GetComponent<Bullet>().player = true;
+
+            if (enemys.Count == 0) levelManager.PassLevel();
         }
     }
 

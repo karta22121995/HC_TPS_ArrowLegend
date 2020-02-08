@@ -16,4 +16,4 @@ MonoBehaviour:
   hpMax: 200
   cd: 1
   bulletPower: 1800
-  attack: 30
+  attack: 1361
