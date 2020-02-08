@@ -6,6 +6,8 @@ public class EnemyData : ScriptableObject   // 腳本化物件 將資料儲存�
 {
     [Header("血量"), Range(100, 3000)]
     public float hp = 100;
+    [Header("血量最大值"), Range(100, 3000)]
+    public float hpMax;
     [Header("攻擊力"), Range(1, 1000)]
     public float attack = 10;
     [Header("移動速度"), Range(0, 100)]
@@ -16,9 +18,9 @@ public class EnemyData : ScriptableObject   // 腳本化物件 將資料儲存�
     public float stopDistance = 1.5f;
     [Header("近戰攻擊距離"), Range(0, 10)]
     public float attackRange = 1.8f;
-    [Header("近戰攻擊時間延遲"), Range(1, 10)]
+    [Header("攻擊延遲時間"), Range(0, 10)]
     public float attackDelay = 0.8f;
-    [Header("遠距離發射子彈位置位移"), Tooltip("X 不要調整，Y 調整高度，Z 調整前後")]
+    [Header("遠攻離發射子彈位置位移"), Tooltip("X 不要調整，Y 調整高度，Z 調整前後")]
     public Vector3 attackOffset;
     [Header("遠攻子彈飛行速度"), Range(1, 2000)]
     public float bulletSpeed;

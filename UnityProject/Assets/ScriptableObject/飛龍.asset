@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ee01847aee450049b6e692fff64e7ec, type: 3}
   m_Name: "\u98DB\u9F8D"
   m_EditorClassIdentifier: 
-  hp: 50
+  hp: 100
+  hpMax: 100
   attack: 30
   speed: 0
-  cd: 2.5
+  cd: 2.2
   stopDistance: 100
   attackRange: 1.8
   attackDelay: 0.8
-  attackOffset: {x: 0, y: 1, z: 1}
-  bulletSpeed: 900
+  attackOffset: {x: 0, y: 1.65, z: 1.2}
+  bulletSpeed: 1000

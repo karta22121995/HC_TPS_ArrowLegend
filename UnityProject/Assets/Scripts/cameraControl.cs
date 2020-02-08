@@ -33,7 +33,7 @@ namespace KID
             Vector3 posCamera = transform.position;     // 變形.座標
 
             posPlayer.x = 0;        // 限制 X 在 0
-            posPlayer.y = 16f;       // 限制 Y 在 16 (原攝影機 Y)
+            posPlayer.y = 16;       // 限制 Y 在 16 (原攝影機 Y)
             posPlayer.z += 15;      // 往玩家後面位移
 
             // 玩家.z = 數學.夾住(玩家.z，上限，下限)

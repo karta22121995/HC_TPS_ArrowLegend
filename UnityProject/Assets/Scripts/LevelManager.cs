@@ -14,8 +14,8 @@ public class LevelManager : MonoBehaviour
 
     private Animator door;              // 門
     private Image cross;                // 轉場畫面
-    private CanvasGroup panelRevival;    // 復活畫面
-    private Text textCountRevival;      // 復活到數秒數
+    private CanvasGroup panelRevival;   // 復活畫面
+    private Text textCountRevival;      // 復活倒數秒數
 
     private void Start()
     {
@@ -23,7 +23,7 @@ public class LevelManager : MonoBehaviour
         cross = GameObject.Find("轉場畫面").GetComponent<Image>();
         panelRevival = GameObject.Find("復活畫面").GetComponent<CanvasGroup>();
         textCountRevival = panelRevival.transform.Find("倒數秒數").GetComponent<Text>();
-        
+
         if (autoOpenDoor) Invoke("OpenDoor", 6);    // 延遲調用("方法名稱"，延遲時間)
         if (showRandomSkill) ShowRandomSkill();
     }
@@ -62,20 +62,34 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    private IEnumerator CountDownRevival()                // 顯示復活畫面
+    /// <summary>
+    /// 復活畫面倒數方法
+    /// </summary>
+    public IEnumerator CountDownRevival()
     {
-        panelRevival.alpha = 1;                   // 顯示復活畫面
-        panelRevival.interactable = true;
-        panelRevival.blocksRaycasts = true;
+        panelRevival.alpha = 1;                             // 顯示復活畫面
+        panelRevival.interactable = true;                   // 可互動
+        panelRevival.blocksRaycasts = true;                 // 阻擋射線
 
-        for (int i = 3; i > 0; i--)                       // 迴圈跑三次 : 3、2、1、0
+        for (int i = 3; i >= 0; i--)                        // 迴圈跑三次：3、2、1、0
         {
-            textCountRevival.text = i.ToString();         // 更新復活到數秒數
-            yield return new WaitForSeconds(1);           // 等待一秒
+            textCountRevival.text = i.ToString();           // 更新復活倒數秒數
+            yield return new WaitForSeconds(1);             // 等待一秒
         }
 
-        panelRevival.alpha = 0;                   // 顯示復活畫面
-        panelRevival.interactable = false;
-        panelRevival.blocksRaycasts = false;
+        panelRevival.alpha = 0;                             // 隱藏復活畫面
+        panelRevival.interactable = false;                  // 不可互動
+        panelRevival.blocksRaycasts = false;                // 不阻擋射線
+    }
+
+    /// <summary>
+    /// 關閉復活畫面
+    /// </summary>
+    public void CloseRevival()
+    {
+        StopCoroutine(CountDownRevival());
+        panelRevival.alpha = 0;                             // 隱藏復活畫面
+        panelRevival.interactable = false;                  // 不可互動
+        panelRevival.blocksRaycasts = false;                // 不阻擋射線
     }
 }
