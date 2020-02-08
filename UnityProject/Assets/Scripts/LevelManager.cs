@@ -16,6 +16,7 @@ public class LevelManager : MonoBehaviour
     private Image cross;                // 轉場畫面
     private CanvasGroup panelRevival;   // 復活畫面
     private Text textCountRevival;      // 復活倒數秒數
+    private GameObject panelResult;     // 結算畫面
 
     private void Start()
     {
@@ -23,9 +24,32 @@ public class LevelManager : MonoBehaviour
         cross = GameObject.Find("轉場畫面").GetComponent<Image>();
         panelRevival = GameObject.Find("復活畫面").GetComponent<CanvasGroup>();
         textCountRevival = panelRevival.transform.Find("倒數秒數").GetComponent<Text>();
+        panelResult = GameObject.Find("結算畫面");
+        panelResult.GetComponent<Bullet>();         // onCLick.AddListener(BackToMenu);       //                      
 
         if (autoOpenDoor) Invoke("OpenDoor", 6);    // 延遲調用("方法名稱"，延遲時間)
         if (showRandomSkill) ShowRandomSkill();
+    }
+
+    /// <summary>
+    /// 返回選單場景
+    /// </summary>
+    private void BackToMenu()
+    {
+        SceneManager.LoadScene("選單畫面");
+    }
+
+    /// <summary>
+    /// 顯示結算畫面
+    /// </summary>
+    public void ShowResult()
+    {
+        panelResult.GetComponent<CanvasGroup>().alpha = 1;                   // 透明 = 1
+        panelResult.GetComponent<CanvasGroup>().interactable = true;         // 互動 = 可
+        panelResult.GetComponent<CanvasGroup>().blocksRaycasts = true;       // 阻擋 = 是
+        panelResult.GetComponent<Animation>();                               // 啟動動畫
+        int currentLevel = SceneManager.GetActiveScene().buildIndex;         // 取得目前關卡索引值
+        panelResult.transform.Find("關卡名稱").GetComponent<Text>().text = "LV：" + currentLevel;
     }
 
     /// <summary>
