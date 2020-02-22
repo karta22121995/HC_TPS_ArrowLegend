@@ -11,21 +11,28 @@ public class LevelManager : MonoBehaviour
     public bool autoOpenDoor;
     [Header("隨機技能介面")]
     public GameObject randomSkill;
+    [Header("是否為魔王關")]
+    public bool isBoss;
 
     private Animator door;              // 門
     private Image cross;                // 轉場畫面
     private CanvasGroup panelRevival;   // 復活畫面
     private Text textCountRevival;      // 復活倒數秒數
     private GameObject panelResult;     // 結算畫面
+    private AdsManager adManager;
 
     private void Start()
     {
         door = GameObject.Find("門").GetComponent<Animator>();
         cross = GameObject.Find("轉場畫面").GetComponent<Image>();
+
+        adManager = FindObjectOfType<AdsManager>();
         panelRevival = GameObject.Find("復活畫面").GetComponent<CanvasGroup>();
         textCountRevival = panelRevival.transform.Find("倒數秒數").GetComponent<Text>();
+        panelRevival.transform.Find("看廣告復活").GetComponent<Button>().onClick.AddListener(adManager.ShowAD);
+        
         panelResult = GameObject.Find("結算畫面");
-        panelResult.GetComponent<Bullet>();         // onCLick.AddListener(BackToMenu);       //                      
+        panelResult.GetComponent<Button>().onClick.AddListener(BackToMenu);                 // 按鈕.點擊.增加監聽者(方法名稱)
 
         if (autoOpenDoor) Invoke("OpenDoor", 6);    // 延遲調用("方法名稱"，延遲時間)
         if (showRandomSkill) ShowRandomSkill();
@@ -44,11 +51,11 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     public void ShowResult()
     {
-        panelResult.GetComponent<CanvasGroup>().alpha = 1;                   // 透明 = 1
-        panelResult.GetComponent<CanvasGroup>().interactable = true;         // 互動 = 可
-        panelResult.GetComponent<CanvasGroup>().blocksRaycasts = true;       // 阻擋 = 是
-        panelResult.GetComponent<Animation>();                               // 啟動動畫
-        int currentLevel = SceneManager.GetActiveScene().buildIndex;         // 取得目前關卡索引值
+        panelResult.GetComponent<CanvasGroup>().alpha = 1;                  // 透明 = 1
+        panelResult.GetComponent<CanvasGroup>().interactable = true;        // 互動 = 可
+        panelResult.GetComponent<CanvasGroup>().blocksRaycasts = true;      // 阻擋 = 是
+        panelResult.GetComponent<Animator>().SetTrigger("結算畫面觸發");     // 啟動動畫
+        int currentLevel = SceneManager.GetActiveScene().buildIndex;        // 取得目前關卡索引值
         panelResult.transform.Find("關卡名稱").GetComponent<Text>().text = "LV：" + currentLevel;
     }
 
@@ -73,17 +80,17 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     private IEnumerator LoadLevel()
     {
-        int sceneindex = SceneManager.GetActiveScene().buildIndex;           // 區域變數 場景索引值 = 場景管理器.取得目前場景().索引值
-        AsyncOperation ao = SceneManager.LoadSceneAsync(++sceneindex);       // 載入場景資訊 = 載入場景(++場景索引值)
-        ao.allowSceneActivation = false;                                     // 載入場景資訊.是否允許切換 = 否
+        int sceneIndex = SceneManager.GetActiveScene().buildIndex;      // 區域變數 場景索引值 = 場景管理器.取得目前場景().索引值
+        AsyncOperation ao = SceneManager.LoadSceneAsync(++sceneIndex);  // 載入場景資訊 = 載入場景(++場景索引值)
+        ao.allowSceneActivation = false;                                // 載入場景資訊.是否允許切換 = 否
 
-        while (!ao.isDone)                                                   // 當(載入場景資訊.是否完成 為 否)
+        while (!ao.isDone)                                              // 當(載入場景資訊.是否完成 為 否)
         {
             print(ao.progress);
-            cross.color = new Color(1, 1, 1, ao.progress);                   // 轉場畫面.顏色 = 新 顏色(1，1，1，透明度) // ao.progress 載入進度 0 - 0.9
+            cross.color = new Color(1, 1, 1, ao.progress);              // 轉場畫面.顏色 = 新 顏色(1，1，1，透明度) // ao.progress 載入進度 0 - 0.9
             yield return new WaitForSeconds(0.01f);
 
-            if (ao.progress >= 0.9f) ao.allowSceneActivation = true;         // 當 載入進度 >= 0.9 允許切換
+            if (ao.progress >= 0.9f) ao.allowSceneActivation = true;    // 當 載入進度 >= 0.9 允許切換
         }
     }
 
@@ -106,9 +113,9 @@ public class LevelManager : MonoBehaviour
         panelRevival.interactable = false;                  // 不可互動
         panelRevival.blocksRaycasts = false;                // 不阻擋射線
 
-        if (AdsManager.lookAd)                              // 如果沒有看廣告
+        if (!AdsManager.lookAd)                             // 如果 沒有看廣告
         {
-        SceneManager.LoadScene("選單畫面");                 // 倒數完回到選單畫面     
+            SceneManager.LoadScene("選單畫面");             // 倒數完回到選單畫面
         }
     }
 
@@ -124,10 +131,17 @@ public class LevelManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 過關：場景上沒有任何一隻怪物時前進下一關
+    /// 過關：場景上沒有任何怪物時前往下一關
     /// </summary>
     public void PassLevel()
     {
-        OpenDoor();                         // 開門
+        OpenDoor();                                 // 開門
+
+        Item[] items = FindObjectsOfType<Item>();   // 所有道具
+
+        for (int i = 0; i < items.Length; i++)
+        {
+            items[i].pass = true;
+        }
     }
 }

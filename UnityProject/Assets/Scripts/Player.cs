@@ -57,7 +57,14 @@ public class Player : MonoBehaviour
     {
         if (other.tag == "傳送區域")
         {
-            levelManager.StartCoroutine("LoadLevel");
+            if (levelManager.isBoss)
+            {
+                levelManager.ShowResult();
+            }
+            else
+            {
+                levelManager.StartCoroutine("LoadLevel");
+            }
         }
     }
     #endregion
@@ -109,7 +116,7 @@ public class Player : MonoBehaviour
             enemys.Clear();                                                                     // 清除清單 (刪除清單內容)
             enemys = FindObjectsOfType<Enemy>().ToList();                                       // 透過類型尋找複數物件 (傳回陣列)    // ToList 將陣列轉換為清單 List
 
-            // 沒有怪物 過關行為
+            // 沒有怪物：過關行為
             if (enemys.Count == 0)
             {
                 levelManager.PassLevel();
@@ -118,10 +125,10 @@ public class Player : MonoBehaviour
 
             ani.SetTrigger("攻擊觸發");     // 播放攻擊動畫 SetTrigger("參數名稱")
 
-                // 2. 取得所有敵人距離
-                // 陣列數量：Length
-                // 清單數量：Count
-                enemysDistance.Clear();                                                             // 清除清單
+            // 2. 取得所有敵人距離
+            // 陣列數量：Length
+            // 清單數量：Count
+            enemysDistance.Clear();                                                             // 清除清單
             for (int i = 0; i < enemys.Count; i++)                                              // 迴圈執行
             {
                 float dis = Vector3.Distance(transform.position, enemys[i].transform.position); // 取得距離
@@ -130,7 +137,7 @@ public class Player : MonoBehaviour
 
             // 3. 取得最短距離
             float min = enemysDistance.Min();           // 取得最短距離
-            int index = enemysDistance.IndexOf(min);  // 取得最短距離的編號
+            int index = enemysDistance.IndexOf(min);    // 取得最短距離的編號
 
             Vector3 enemyTarget = enemys[index].transform.position;
             enemyTarget.y = transform.position.y;
@@ -142,8 +149,6 @@ public class Player : MonoBehaviour
             bullet.AddComponent<Bullet>();
             bullet.GetComponent<Bullet>().damage = data.attack;
             bullet.GetComponent<Bullet>().player = true;
-
-            if (enemys.Count == 0) levelManager.PassLevel();
         }
     }
 
@@ -176,10 +181,10 @@ public class Player : MonoBehaviour
     /// </summary>
     public void Revival()
     {
+        this.enabled = true;                            // 此腳本.啟動 = 開啟
         data.hp = data.hpMax;                           // 血量恢復為最大值
         hpControl.UpdateHpBar(data.hpMax, data.hp);     // 更新血條
         ani.SetBool("死亡動畫", false);                 // 動畫設為沒有死亡
-        this.enabled = true;                            // 此腳本.啟動 = 開啟
         levelManager.CloseRevival();                    // 關卡管理器.關閉復活畫面
     }
     #endregion

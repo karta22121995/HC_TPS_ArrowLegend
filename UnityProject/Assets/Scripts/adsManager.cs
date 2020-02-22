@@ -9,7 +9,7 @@ public class AdsManager : MonoBehaviour, IUnityAdsListener
     private string placemnetRevival = "revival";    // 廣告類型：復活
     private Player player;                          // 玩家腳本
 
-    public static bool lookAd;
+    public static bool lookAd;                      // 靜態 布林值 是否看廣告
 
     private void Start()
     {
